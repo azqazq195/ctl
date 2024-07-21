@@ -1,0 +1,28 @@
+name: EzisCtl
+services:
+  downloads:
+    hbase:
+      description: hadoop database for apm
+      urls:
+        - https://dlcdn.apache.org/hbase/2.6.0/hbase-2.6.0-bin.tar.gz
+        - https://dlcdn.apache.org/hbase/2.6.0/hbase-2.6.0-bin.tar.gz
+      required: true
+
+    zookeeper:
+      description: zookeeper for hbase
+      urls:
+        - https://dlcdn.apache.org/zookeeper/zookeeper-3.9.2/apache-zookeeper-3.9.2-bin.tar.gz
+        - https://dlcdn.apache.org/zookeeper/zookeeper-3.9.2/apache-zookeeper-3.9.2-bin.tar.gz
+      required: true
+
+  installs:
+    hbase:
+      path: echo "hbase"
+    zookeeper:
+      path: echo "zookeeper"
+
+  runs:
+    hbase:
+      path: echo "hbase run"
+    zookeeper:
+      path: echo "zookeeper run"
