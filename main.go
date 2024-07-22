@@ -3,10 +3,10 @@ package main
 import (
 	"ctl/config"
 	"fmt"
-	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"os"
 )
 
 var (
@@ -31,46 +31,9 @@ func (i item) Title() string       { return i.title }
 func (i item) Description() string { return i.description }
 func (i item) FilterValue() string { return i.title }
 
-type listKeyMap struct {
-	toggleSpinner    key.Binding
-	toggleTitleBar   key.Binding
-	toggleStatusBar  key.Binding
-	togglePagination key.Binding
-	toggleHelpMenu   key.Binding
-	insertItem       key.Binding
-}
-
-func newListKeyMap() *listKeyMap {
-	return &listKeyMap{}
-}
-
 type model struct {
 	list         list.Model
 	delegateKeys *delegateKeyMap
-}
-
-func newModel() model {
-	var (
-		delegateKeys = newDelegateKeyMap()
-	)
-
-	// Make initial list of items
-	const numItems = 2
-	items := make([]list.Item, numItems)
-	items[0] = item{title: "Download", description: "Download dependency"}
-	items[1] = item{title: "Install", description: "Install application"}
-	//items[2] = item{title: "App Manage", description: "Application processing"}
-
-	// Setup list
-	delegate := newItemDelegate(delegateKeys)
-	groceryList := list.New(items, delegate, 0, 0)
-	groceryList.Title = "EzisCtl"
-	groceryList.Styles.Title = titleStyle
-
-	return model{
-		list:         groceryList,
-		delegateKeys: delegateKeys,
-	}
 }
 
 func (m model) Init() tea.Cmd {
@@ -105,15 +68,44 @@ func (m model) View() string {
 	return appStyle.Render(m.list.View())
 }
 
-//func main() {
-//	config := config.LoadConfig()
-//	fmt.Println(config)
-//	//if _, err := tea.NewProgram(newModel(), tea.WithAltScreen()).Run(); err != nil {
-//	//	fmt.Println("Error running program:", err)
-//	//	os.Exit(1)
-//	//}
-//}
+func configModel(cfg *config.Config) model {
+	var (
+		delegateKeys = newDelegateKeyMap()
+	)
 
+	// Make initial list of items
+
+	var items []list.Item
+	if len(cfg.Services.Downloads) > 0 {
+		items = append(items, item{
+			title:       "Download",
+			description: "Download dependency",
+		})
+	}
+	if len(cfg.Services.Installs) > 0 {
+		items = append(items, item{
+			title:       "Install",
+			description: "Install application",
+		})
+	}
+	if len(cfg.Services.Runs) > 0 {
+		items = append(items, item{
+			title:       "Runs",
+			description: "Run application",
+		})
+	}
+
+	// Setup list
+	delegate := newItemDelegate(delegateKeys)
+	groceryList := list.New(items, delegate, 0, 0)
+	groceryList.Title = "EzisCtl"
+	groceryList.Styles.Title = titleStyle
+
+	return model{
+		list:         groceryList,
+		delegateKeys: delegateKeys,
+	}
+}
 func main() {
 	cfg := config.LoadConfig()
 
@@ -139,5 +131,10 @@ func main() {
 	for name, service := range cfg.Services.Runs {
 		fmt.Printf("  %s:\n", name)
 		fmt.Printf("    Path: %s\n", service.Path)
+	}
+
+	if _, err := tea.NewProgram(configModel(&cfg), tea.WithAltScreen()).Run(); err != nil {
+		fmt.Println("Error running program:", err)
+		os.Exit(1)
 	}
 }
