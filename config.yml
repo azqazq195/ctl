@@ -1,7 +1,8 @@
-name: EzisCtl
+name: Ezisctl
 services:
   downloads:
     hbase:
+      version: 2.6.0
       description: hadoop database for apm
       urls:
         - https://dlcdn.apache.org/hbase/2.6.0/hbase-2.6.0-bin.tar.gz
@@ -9,6 +10,7 @@ services:
       required: true
 
     zookeeper:
+      version: 3.9.2
       description: zookeeper for hbase
       urls:
         - https://dlcdn.apache.org/zookeeper/zookeeper-3.9.2/apache-zookeeper-3.9.2-bin.tar.gz

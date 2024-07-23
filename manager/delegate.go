@@ -1,4 +1,4 @@
-package main
+package manager
 
 import (
 	"github.com/charmbracelet/bubbles/key"
@@ -22,7 +22,12 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 		case tea.KeyMsg:
 			switch {
 			case key.Matches(msg, keys.choose):
-				return m.NewStatusMessage(statusMessageStyle("You chose " + title))
+				switch title {
+				case "Downloads":
+				}
+
+				return nil
+				//return m.NewStatusMessage(statusMessageStyle("You chose " + title))
 			}
 		}
 
