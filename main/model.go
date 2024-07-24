@@ -1,8 +1,7 @@
-package manager
+package main
 
 import (
 	"ctl/config"
-	"ctl/download"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -24,7 +23,6 @@ var (
 type item struct {
 	title       string
 	description string
-	view        string
 }
 
 func (i item) Title() string       { return i.title }
@@ -82,7 +80,6 @@ func New(cfg *config.Config) Model {
 		items = append(items, item{
 			title:       "Downloads",
 			description: "Download dependency",
-			view:        download.New().View(),
 		})
 	}
 	//if len(cfg.Services.Installs) > 0 {

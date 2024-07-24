@@ -1,43 +1,27 @@
 package main
 
 import (
-	"ctl/config"
-	"ctl/manager"
+	"ctl/run"
 	"fmt"
 	tea "github.com/charmbracelet/bubbletea"
 	"os"
+	"time"
 )
 
+type TickMsg time.Time
+type Model struct {
+	name string
+	num  int
+}
+
 func main() {
-	cfg := config.LoadConfig()
+	//cfg := config.LoadConfig()
+	//p := tea.NewProgram(main.New(&cfg), tea.WithAltScreen())
 
-	//fmt.Println("Config Name:", cfg.Name)
-	//fmt.Println("Downloads:")
-	//for name, service := range cfg.Services.Downloads {
-	//	fmt.Printf("  %s:\n", name)
-	//	fmt.Printf("    Description: %s\n", service.Description)
-	//	fmt.Println("    URLs:")
-	//	for _, url := range service.URLs {
-	//		fmt.Printf("      - %s\n", url)
-	//	}
-	//	fmt.Printf("    Required: %t\n", service.Required)
-	//}
-	//
-	//fmt.Println("Installs:")
-	//for name, service := range cfg.Services.Installs {
-	//	fmt.Printf("  %s:\n", name)
-	//	fmt.Printf("    Path: %s\n", service.Path)
-	//}
-	//
-	//fmt.Println("Runs:")
-	//for name, service := range cfg.Services.Runs {
-	//	fmt.Printf("  %s:\n", name)
-	//	fmt.Printf("    Path: %s\n", service.Path)
-	//}
-
-	p := tea.NewProgram(manager.New(&cfg), tea.WithAltScreen())
+	p := tea.NewProgram(run.New(), tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}
+
 }
